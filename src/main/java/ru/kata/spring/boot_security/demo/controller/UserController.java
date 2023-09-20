@@ -8,7 +8,7 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -16,7 +16,7 @@ public class UserController {
     @GetMapping
     public String listUsers(ModelMap model) {
         model.addAttribute("users", userService.listUsers());
-        return "users";
+        return "user";
     }
 
     @PostMapping("/add")
