@@ -1,48 +1,25 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.model.User;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.security.Principal;
+
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/user")
+@PreAuthorize("hasAuthority('ROLE_USER')")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public String listUsers(ModelMap model) {
-        model.addAttribute("users", userService.listUsers());
+    public String getUser(ModelMap model, Principal principal) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "user";
-    }
-
-    @PostMapping("/add")
-    public String add(ModelMap model, User user) {
-        userService.add(user);
-        model.addAttribute("users", userService.listUsers());
-        return "users";
-    }
-
-    @GetMapping("/update/{id}")
-    public String update(ModelMap model, @PathVariable Long id) {
-        model.addAttribute("user", userService.findById(id));
-        return "update-user";
-    }
-
-    @PatchMapping("/update")
-    public String update(ModelMap model, User user) {
-        userService.update(user);
-        model.addAttribute("users", userService.listUsers());
-        return "users";
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public String delete(ModelMap model, @PathVariable Long id) {
-        userService.remove(id);
-        model.addAttribute("users", userService.listUsers());
-        return "users";
     }
 }
