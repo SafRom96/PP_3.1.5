@@ -1,6 +1,11 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -30,13 +35,13 @@ public class User implements UserDetails {
     private boolean active;
     @Column(length = 1000)
     private String password;
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinTable(
             name = "User_Roles",
             joinColumns = {@JoinColumn(name = "User_id")},
             inverseJoinColumns = {@JoinColumn(name = "Role_id")}
     )
-    @ToString.Exclude
+    @Fetch(FetchMode.JOIN)
     private Set<Role> roles = new HashSet<>();
     private LocalDateTime dateOfCreated;
 
@@ -55,6 +60,15 @@ public class User implements UserDetails {
         this.age = age;
         this.password = password;
         this.roles.add(role);
+    }
+
+    public String getStringRoles() {
+        StringBuilder sb = new StringBuilder();
+        for (Role role : roles) {
+            sb.append(role.getName()).append(" ");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 
     public String getRole() {

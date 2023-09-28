@@ -12,7 +12,7 @@ import java.security.Principal;
 
 @Controller
 @RequestMapping("/user")
-@PreAuthorize("hasAuthority('ROLE_USER')")
+@PreAuthorize("hasAuthority('USER')")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;

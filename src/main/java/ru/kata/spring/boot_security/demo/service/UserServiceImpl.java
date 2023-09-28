@@ -38,12 +38,12 @@ public class UserServiceImpl implements UserService {
         user.setActive(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (Objects.equals(userDto.getRole(), "ADMIN")) {
-            Role roleAdmin = roleRepository.findByName("ROLE_ADMIN");
-            Role roleUser = roleRepository.findByName("ROLE_USER");
+            Role roleAdmin = roleRepository.findByName("ADMIN");
+            Role roleUser = roleRepository.findByName("USER");
             user.addRole(roleUser);
             user.addRole(roleAdmin);
         } else if (Objects.equals(userDto.getRole(), "USER")) {
-            Role roleUser = roleRepository.findByName("ROLE_USER");
+            Role roleUser = roleRepository.findByName("USER");
             user.addRole(roleUser);
         }
         userRepository.save(user);
@@ -75,13 +75,12 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(updateUser.getPassword()));
         }
         if (Objects.equals(role, "ADMIN")) {
-            Role roleAdmin = roleRepository.findByName("ROLE_ADMIN");
-            Role roleUser = roleRepository.findByName("ROLE_USER");
+            Role roleAdmin = roleRepository.findByName("ADMIN");
+            Role roleUser = roleRepository.findByName("USER");
             user.addRole(roleUser);
             user.addRole(roleAdmin);
         } else if (Objects.equals(role, "USER")) {
-            Role roleAdmin = roleRepository.findByName("ROLE_ADMIN");
-            System.out.println("!!!!!!!!!   " + roleAdmin);
+            Role roleAdmin = roleRepository.findByName("ADMIN");
             user.deleteRole(roleAdmin);
         }
     }
