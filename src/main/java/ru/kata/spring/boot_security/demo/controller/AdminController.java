@@ -14,7 +14,7 @@ import java.security.Principal;
 
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+@PreAuthorize("hasAuthority('ADMIN')")
 @RequiredArgsConstructor
 public class AdminController {
     private final UserService userService;
@@ -29,35 +29,30 @@ public class AdminController {
     }
 
     @PostMapping("/add")
-    public String add(ModelMap model, UserDto userDto) {
+    public String add(ModelMap model, UserDto userDto, Principal principal) {
         userService.existByEmail(userDto.getEmail());
         userService.add(userDto);
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         model.addAttribute("users", userService.listUsers());
         model.addAttribute("roles", roleService.getRoles());
         return "users";
     }
 
-    @GetMapping("/update/{id}")
-    public String update(ModelMap model, @PathVariable Long id) {
-        userService.existById(id);
-        model.addAttribute("user", userService.findById(id));
-        model.addAttribute("roles", roleService.getRoles());
-        return "update-user";
-    }
-
     @PatchMapping("/update")
-    public String update(ModelMap model, User user, @RequestParam String role) {
+    public String update(ModelMap model, User user, @RequestParam String role, Principal principal) {
         userService.existById(user.getId());
         userService.update(user, role);
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         model.addAttribute("users", userService.listUsers());
         model.addAttribute("roles", roleService.getRoles());
         return "users";
     }
 
     @DeleteMapping("/delete/{id}")
-    public String delete(ModelMap model, @PathVariable Long id) {
+    public String delete(ModelMap model, @PathVariable Long id, Principal principal) {
         userService.existById(id);
         userService.remove(id);
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
         model.addAttribute("users", userService.listUsers());
         model.addAttribute("roles", roleService.getRoles());
         return "users";
