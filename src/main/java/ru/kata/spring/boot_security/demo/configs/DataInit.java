@@ -20,16 +20,16 @@ public class DataInit {
 
     @PostConstruct
     public void start() {
-        Role adminRole = roleService.add(new Role("ROLE_ADMIN"));
-        roleService.add(new Role("ROLE_USER"));
+        Role adminRole = roleService.add(new Role("ADMIN"));
+        Role userRole = roleService.add(new Role("USER"));
         User admin = new User(
                 "Ivan",
                 "Ivanov",
                 "admin@gmail.com",
-
                 "admin",
                 98,
-                adminRole);
+                userRole);
+        admin.addRole(adminRole);
         userService.add(admin);
     }
 }
