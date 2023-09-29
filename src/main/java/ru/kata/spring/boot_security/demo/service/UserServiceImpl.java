@@ -5,17 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dto.UserDto;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Objects;
-
-import static ru.kata.spring.boot_security.demo.mapper.UserMapper.toUser;
 
 @Service
 @Slf4j
@@ -33,29 +28,14 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void add(UserDto userDto) {
-        User user = toUser(userDto);
+    public void add(User user, List<Integer> selectedRoles) {
         user.setActive(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (Objects.equals(userDto.getRole(), "ADMIN")) {
-            Role roleAdmin = roleRepository.findByName("ADMIN");
-            Role roleUser = roleRepository.findByName("USER");
-            user.addRole(roleUser);
-            user.addRole(roleAdmin);
-        } else if (Objects.equals(userDto.getRole(), "USER")) {
-            Role roleUser = roleRepository.findByName("USER");
-            user.addRole(roleUser);
+        for (Integer id : selectedRoles) {
+            user.addRole(roleRepository.getById(id));
         }
         userRepository.save(user);
         log.info("save user with email {}", user.getEmail());
-    }
-
-    @Transactional
-    @Override
-    public void add(User user) {
-        user.setActive(true);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
     }
 
     @Override
@@ -65,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void update(User updateUser, String role) {
+    public void update(User updateUser, List<Integer> selectedRoles) {
         User user = userRepository.getById(updateUser.getId());
         user.setFirstName(updateUser.getFirstName());
         user.setLastName(updateUser.getLastName());
@@ -74,14 +54,11 @@ public class UserServiceImpl implements UserService {
         if (!updateUser.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(updateUser.getPassword()));
         }
-        if (Objects.equals(role, "ADMIN")) {
-            Role roleAdmin = roleRepository.findByName("ADMIN");
-            Role roleUser = roleRepository.findByName("USER");
-            user.addRole(roleUser);
-            user.addRole(roleAdmin);
-        } else if (Objects.equals(role, "USER")) {
-            Role roleAdmin = roleRepository.findByName("ADMIN");
-            user.deleteRole(roleAdmin);
+        if (selectedRoles != null) {
+            user.getRoles().clear();
+            for (Integer id : selectedRoles) {
+                user.addRole(roleRepository.getById(id));
+            }
         }
     }
 
@@ -97,13 +74,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void existById(Long id) {
-        if (!userRepository.existsById(id)) throw new RuntimeException("Пользователь не найден с id: " + id);
+    public boolean existById(Long id) {
+        return userRepository.existsById(id);
     }
 
     @Override
-    public void existByEmail(String email) {
-        if (userRepository.existsByEmail(email))
-            throw new RuntimeException("Пользователь уже существует с email: " + email);
+    public boolean existByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

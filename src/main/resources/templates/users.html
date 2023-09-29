@@ -138,11 +138,14 @@
                                                        name="password">
                                             </div>
                                             <div class="col-md-12">
-                                                <label for="role" class="form-label">Role</label>
-                                                <select id="role" class="form-select" name="role">
-                                                    <option value="ADMIN">ADMIN</option>
-                                                    <option value="USER">USER</option>
-                                                </select>
+                                                <div class="form-group">
+                                                    <label for="roles">Roles:</label>
+                                                    <select multiple class="form-control" id="roles"
+                                                            name="selectedRoles">
+                                                        <option th:each="role : ${roles}" th:value="${role.id}"
+                                                                th:text="${role.name}"></option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div class="col-12">
                                                 <input type="hidden" name="_csrf" th:value="${_csrf.token}">
@@ -256,12 +259,13 @@
 
 
                         <div class="mb-3">
-                            <label for="role_" class="form-label">Role</label>
-                            <select id="role_" class="form-select" name="role">
-                                <option value="-"></option>
-                                <option value="ADMIN">ADMIN</option>
-                                <option value="USER">USER</option>
-                            </select>
+                            <div class="form-group">
+                                <label for="roles_">Roles:</label>
+                                <select multiple class="form-control" id="roles_" name="selectedRoles">
+                                    <option th:each="role : ${roles}" th:value="${role.id}"
+                                            th:text="${role.name}"></option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
