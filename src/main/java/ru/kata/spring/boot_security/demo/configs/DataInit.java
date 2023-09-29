@@ -7,6 +7,7 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Component
 public class DataInit {
@@ -20,16 +21,14 @@ public class DataInit {
 
     @PostConstruct
     public void start() {
-        Role adminRole = roleService.add(new Role("ADMIN"));
-        Role userRole = roleService.add(new Role("USER"));
+        Role adminRole = roleService.add(new Role("ROLE_ADMIN"));
+        Role userRole = roleService.add(new Role("ROLE_USER"));
         User admin = new User(
                 "Ivan",
                 "Ivanov",
                 "admin@gmail.com",
                 "admin",
-                98,
-                userRole);
-        admin.addRole(adminRole);
-        userService.add(admin);
+                98);
+        userService.add(admin, List.of(adminRole.getId(), userRole.getId()));
     }
 }

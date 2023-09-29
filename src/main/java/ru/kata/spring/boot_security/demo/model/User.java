@@ -1,9 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,6 +33,8 @@ public class User implements UserDetails {
     private boolean active;
     @Column(length = 1000)
     private String password;
+
+    @Getter
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinTable(
             name = "User_Roles",
@@ -53,14 +53,6 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public User(String firstName, String lastName, String email, String password, Integer age, Role role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.age = age;
-        this.password = password;
-        this.roles.add(role);
-    }
 
     public String getStringRoles() {
         StringBuilder sb = new StringBuilder();
