@@ -1,8 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -34,14 +32,12 @@ public class User implements UserDetails {
     @Column(length = 1000)
     private String password;
 
-    @Getter
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinTable(
             name = "User_Roles",
             joinColumns = {@JoinColumn(name = "User_id")},
             inverseJoinColumns = {@JoinColumn(name = "Role_id")}
     )
-    @Fetch(FetchMode.JOIN)
     private Set<Role> roles = new HashSet<>();
     private LocalDateTime dateOfCreated;
 
