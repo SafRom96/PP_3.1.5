@@ -7,7 +7,6 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 
 @Component
 public class DataInit {
@@ -18,7 +17,7 @@ public class DataInit {
         this.userService = userService;
         this.roleService = roleService;
     }
-//    https://github.com/yungbrave/PP_3.1.5/tree/main
+
     @PostConstruct
     public void start() {
         Role adminRole = roleService.add(new Role("ROLE_ADMIN"));
