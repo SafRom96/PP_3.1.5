@@ -37,7 +37,7 @@ public class AdminController {
         return ResponseEntity.ok(roleService.getRoles());
     }
 
-    @PostMapping("/new")
+    @PostMapping("new")
     public ResponseEntity<User> addNewUser(@RequestBody User user) {
         if (userService.existByEmail(user.getEmail()))
             throw new RuntimeException("Пользователь уже существует с email: " + user.getEmail());
@@ -53,7 +53,7 @@ public class AdminController {
         return ResponseEntity.ok(userService.findUserByEmail(user.getEmail()));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("delete/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
         if (!userService.existById(id)) throw new RuntimeException("Пользователь не найден с id: " + id);
         userService.remove(id);
