@@ -8,11 +8,11 @@ import java.util.List;
 public interface UserService {
     User getUserByPrincipal(Principal principal);
 
-    void add(User user, List<Integer> selectedRoles);
+    void add(User user);
 
     List<User> listUsers();
 
-    void update(User user, List<Integer> selectedRoles);
+    void update(User user);
 
     void remove(Long id);
 
@@ -21,4 +21,6 @@ public interface UserService {
     boolean existById(Long id);
 
     boolean existByEmail(String email);
+
+    User findUserByEmail(String email);
 }

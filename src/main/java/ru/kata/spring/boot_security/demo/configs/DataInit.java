@@ -18,7 +18,7 @@ public class DataInit {
         this.userService = userService;
         this.roleService = roleService;
     }
-
+//    https://github.com/yungbrave/PP_3.1.5/tree/main
     @PostConstruct
     public void start() {
         Role adminRole = roleService.add(new Role("ROLE_ADMIN"));
@@ -29,6 +29,8 @@ public class DataInit {
                 "admin@gmail.com",
                 "admin",
                 98);
-        userService.add(admin, List.of(adminRole.getId(), userRole.getId()));
+        admin.getRoles().add(adminRole);
+        admin.getRoles().add(userRole);
+        userService.add(admin);
     }
 }
